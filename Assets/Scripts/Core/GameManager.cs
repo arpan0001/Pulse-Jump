@@ -1,4 +1,5 @@
 using UnityEngine;
+using PulseJump.Level;
 
 namespace PulseJump.Core
 {
@@ -6,11 +7,19 @@ namespace PulseJump.Core
     {
         public static GameManager Instance { get; private set; }
 
-        public GameState State { get; private set; }
+        public GameState CurrentState { get; private set; }
+
+
+        [Header("References")]
+
+        [SerializeField]
+        private WorldMovement worldMovement;
+
 
         private void Awake()
         {
-            if (Instance != null && Instance != this)
+            if (Instance != null &&
+                Instance != this)
             {
                 Destroy(gameObject);
                 return;
@@ -18,52 +27,71 @@ namespace PulseJump.Core
 
             Instance = this;
 
-            State = GameState.MainMenu;
+            CurrentState =
+                GameState.MainMenu;
         }
+
 
         public void StartGame()
         {
-            State = GameState.Playing;
+            CurrentState =
+                GameState.Playing;
+
+            worldMovement.StartMovement();
         }
+
 
         public void PauseGame()
         {
-            if (State != GameState.Playing)
+            if (CurrentState !=
+                GameState.Playing)
                 return;
 
-            State = GameState.Paused;
+
+            CurrentState =
+                GameState.Paused;
+
+            worldMovement.StopMovement();
 
             Time.timeScale = 0f;
         }
 
+
         public void ResumeGame()
         {
-            if (State != GameState.Paused)
+            if (CurrentState !=
+                GameState.Paused)
                 return;
+
 
             Time.timeScale = 1f;
 
-            State = GameState.Playing;
+            CurrentState =
+                GameState.Playing;
+
+            worldMovement.StartMovement();
         }
+
 
         public void GameOver()
         {
-            if (State == GameState.GameOver)
-                return;
-
             Time.timeScale = 1f;
 
-            State = GameState.GameOver;
+            CurrentState =
+                GameState.GameOver;
+
+            worldMovement.StopMovement();
         }
+
 
         public void WinGame()
         {
-            if (State == GameState.Won)
-                return;
-
             Time.timeScale = 1f;
 
-            State = GameState.Won;
+            CurrentState =
+                GameState.Won;
+
+            worldMovement.StopMovement();
         }
     }
 }
