@@ -83,6 +83,11 @@ namespace PulseJump.Core
             worldMovement.StopMovement();
         }
 
+        private void Start()
+        {
+            StartGame();
+        }
+
 
         public void WinGame()
         {

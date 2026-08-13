@@ -31,7 +31,7 @@ namespace PulseJump.Level
             if (!_isMoving)
                 return;
 
-            transform.Translate( Vector3.down *  moveSpeed *Time.deltaTime, Space.World);
+            transform.Translate( Vector3.back *  moveSpeed *Time.deltaTime, Space.World);
         }
     }
 }
