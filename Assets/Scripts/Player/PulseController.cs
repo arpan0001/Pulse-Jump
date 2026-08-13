@@ -67,7 +67,10 @@ namespace PulseJump.Player
             _pulseCoroutine = null;
         }
 
-
+        private void CheckPulse()
+        {
+            Debug.Log("Pulse Check Triggered!");
+        }
         private IEnumerator ScaleTo(Vector3 targetScale,float duration)
         {
             Vector3 startScale =  transform.localScale;
@@ -100,7 +103,7 @@ namespace PulseJump.Player
             }
 
 
-            transform.localScale =targetScale;
+            transform.localScale =   targetScale;
         }
     }
 }
