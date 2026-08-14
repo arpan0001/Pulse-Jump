@@ -5,12 +5,30 @@ namespace PulseJump.Game
 {
     public class DifficultyManager : MonoBehaviour
     {
+        public enum DifficultyLevel
+        {
+            Easy,
+            Medium,
+            Hard,
+            VeryHard
+        }
+
+
+        public DifficultyLevel CurrentLevel
+        {
+            get;
+            private set;
+        }
+
+
         [Header("References")]
+
         [SerializeField]
         private WorldMovement worldMovement;
 
 
         [Header("Speed")]
+
         [SerializeField]
         private float startingSpeed = 5f;
 
@@ -21,16 +39,70 @@ namespace PulseJump.Game
         private float speedIncreasePerSecond = 0.05f;
 
 
+        [Header("Obstacle Chance")]
+
+        [SerializeField]
+        [Range(0f, 1f)]
+        private float easyObstacleChance = 0.35f;
+
+        [SerializeField]
+        [Range(0f, 1f)]
+        private float mediumObstacleChance = 0.50f;
+
+        [SerializeField]
+        [Range(0f, 1f)]
+        private float hardObstacleChance = 0.65f;
+
+        [SerializeField]
+        [Range(0f, 1f)]
+        private float veryHardObstacleChance = 0.80f;
+
+
+        [Header("Minimum Safe Segments")]
+
+        [SerializeField]
+        private int easySafeSegments = 3;
+
+        [SerializeField]
+        private int mediumSafeSegments = 2;
+
+        [SerializeField]
+        private int hardSafeSegments = 1;
+
+        [SerializeField]
+        private int veryHardSafeSegments = 1;
+
+
         private float _elapsedTime;
         private float _currentSpeed;
 
 
         public float CurrentSpeed => _currentSpeed;
 
+        public float ElapsedTime => _elapsedTime;
+
 
         private void Start()
         {
-            _currentSpeed = startingSpeed;
+            // Start the game on Easy.
+            CurrentLevel =
+                DifficultyLevel.Easy;
+
+
+            // Set initial speed.
+            _currentSpeed =
+                startingSpeed;
+
+
+            if (worldMovement == null)
+            {
+                Debug.LogError(
+                    "DifficultyManager: WorldMovement reference is missing.",
+                    this);
+
+                return;
+            }
+
 
             worldMovement.SetMoveSpeed(
                 _currentSpeed);
@@ -39,14 +111,55 @@ namespace PulseJump.Game
 
         private void Update()
         {
+            // Increase elapsed gameplay time.
             _elapsedTime +=
                 Time.deltaTime;
 
 
+            // Determine Easy / Medium / Hard / VeryHard.
+            UpdateDifficultyLevel(
+                _elapsedTime);
+
+
+            // Update world movement speed.
             UpdateDifficulty(
                 _elapsedTime);
         }
 
+
+        // --------------------------------------------------
+        // DIFFICULTY LEVEL
+        // --------------------------------------------------
+
+        private void UpdateDifficultyLevel(
+            float elapsedTime)
+        {
+            if (elapsedTime < 20f)
+            {
+                CurrentLevel =
+                    DifficultyLevel.Easy;
+            }
+            else if (elapsedTime < 40f)
+            {
+                CurrentLevel =
+                    DifficultyLevel.Medium;
+            }
+            else if (elapsedTime < 60f)
+            {
+                CurrentLevel =
+                    DifficultyLevel.Hard;
+            }
+            else
+            {
+                CurrentLevel =
+                    DifficultyLevel.VeryHard;
+            }
+        }
+
+
+        // --------------------------------------------------
+        // WORLD SPEED
+        // --------------------------------------------------
 
         private void UpdateDifficulty(
             float elapsedTime)
@@ -63,8 +176,71 @@ namespace PulseJump.Game
                     maximumSpeed);
 
 
-            worldMovement.SetMoveSpeed(
-                _currentSpeed);
+            if (worldMovement != null)
+            {
+                worldMovement.SetMoveSpeed(
+                    _currentSpeed);
+            }
+        }
+
+
+        // --------------------------------------------------
+        // OBSTACLE CHANCE
+        // --------------------------------------------------
+
+        public float GetObstacleChance()
+        {
+            switch (CurrentLevel)
+            {
+                case DifficultyLevel.Easy:
+                    return easyObstacleChance;
+
+
+                case DifficultyLevel.Medium:
+                    return mediumObstacleChance;
+
+
+                case DifficultyLevel.Hard:
+                    return hardObstacleChance;
+
+
+                case DifficultyLevel.VeryHard:
+                    return veryHardObstacleChance;
+
+
+                default:
+                    return easyObstacleChance;
+            }
+        }
+
+
+        // --------------------------------------------------
+        // MINIMUM SAFE DISTANCE
+        // --------------------------------------------------
+
+        public int GetMinimumSafeSegments()
+        {
+            switch (CurrentLevel)
+            {
+                case DifficultyLevel.Easy:
+                    return easySafeSegments;
+
+
+                case DifficultyLevel.Medium:
+                    return mediumSafeSegments;
+
+
+                case DifficultyLevel.Hard:
+                    return hardSafeSegments;
+
+
+                case DifficultyLevel.VeryHard:
+                    return veryHardSafeSegments;
+
+
+                default:
+                    return easySafeSegments;
+            }
         }
     }
 }
