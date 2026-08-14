@@ -11,5 +11,24 @@ namespace PulseJump.Obstacles
         [Header("Available Barriers")]
         public List<BarrierDefinition> barriers =
             new List<BarrierDefinition>();
+
+
+        public BarrierDefinition GetRandomBarrier()
+        {
+            if (barriers == null ||
+                barriers.Count == 0)
+            {
+                return null;
+            }
+
+
+            int index =
+                Random.Range(
+                    0,
+                    barriers.Count);
+
+
+            return barriers[index];
+        }
     }
 }

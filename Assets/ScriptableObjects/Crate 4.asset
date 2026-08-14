@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0779614738ca7084e9aeb32044167c0b, type: 3}
-  m_Name: BarrierDefinition
+  m_Name: Crate 4
   m_EditorClassIdentifier: 
-  barrierName: 
-  prefab: {fileID: 0}
+  barrierName: Crate 4
+  prefab: {fileID: 6021520635170790451, guid: fb322c215803a394d8bf4e25d21b882c, type: 3}
   spawnWeight: 1

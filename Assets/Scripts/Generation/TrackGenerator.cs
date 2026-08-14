@@ -1,3 +1,4 @@
+using PulseJump.Obstacles;
 using UnityEngine;
 
 namespace PulseJump.Generation
@@ -9,6 +10,8 @@ namespace PulseJump.Generation
         [SerializeField]
         private TrackPool trackPool;
 
+        [SerializeField]
+        private BarrierLibrary barrierLibrary;
 
         [Header("Track Settings")]
 
@@ -66,6 +69,46 @@ namespace PulseJump.Generation
 
 
             _nextZ += trackLength;
+        }
+
+        private void TrySpawnBarrier(
+     TrackSegment segment)
+        {
+            if (barrierLibrary == null)
+            {
+                Debug.LogError(
+                    "TrackGenerator: BarrierLibrary is missing.",
+                    this);
+
+                return;
+            }
+
+
+            BarrierDefinition definition =
+                barrierLibrary.GetRandomBarrier();
+
+
+            if (definition == null)
+                return;
+
+
+            if (definition.prefab == null)
+            {
+                Debug.LogError(
+                    "BarrierDefinition has no prefab.",
+                    definition);
+
+                return;
+            }
+
+
+            GameObject barrier =
+                Instantiate(
+                    definition.prefab);
+
+
+            segment.SetBarrier(
+                barrier);
         }
 
 
