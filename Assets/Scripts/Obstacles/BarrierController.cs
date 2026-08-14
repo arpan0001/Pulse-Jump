@@ -9,7 +9,8 @@ namespace PulseJump.Obstacles
         [Header("References")]
 
         [SerializeField]
-        private PulseController _pulseController;
+        private PulseController pulseController;
+
 
         private bool _hasBeenChecked;
         private bool _hasPassed;
@@ -21,10 +22,7 @@ namespace PulseJump.Obstacles
             _hasPassed = false;
         }
 
-        public void Initialize(PulseController pulseController)
-        {
-            _pulseController = pulseController;
-        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (_hasBeenChecked)
@@ -44,7 +42,7 @@ namespace PulseJump.Obstacles
 
         private void EvaluatePlayer()
         {
-            if (_pulseController == null)
+            if (pulseController == null)
             {
                 Debug.LogError(
                     "PulseController is missing.",
@@ -54,7 +52,7 @@ namespace PulseJump.Obstacles
             }
 
 
-            if (_pulseController.IsPulsing)
+            if (pulseController.IsPulsing)
             {
                 PassBarrier();
             }
