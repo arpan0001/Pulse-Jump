@@ -1,91 +1,41 @@
 using UnityEngine;
 using PulseJump.Player;
-using PulseJump.Core;
 
 namespace PulseJump.Obstacles
 {
     public class BarrierController : MonoBehaviour
     {
-        [Header("References")]
-
-        [SerializeField]
-        private PulseController pulseController;
-
-
-        private bool _hasBeenChecked;
-        private bool _hasPassed;
-
-
-        public void ResetBarrier()
-        {
-            _hasBeenChecked = false;
-            _hasPassed = false;
-        }
-
-
         private void OnTriggerEnter(Collider other)
         {
-            if (_hasBeenChecked)
-                return;
-
-
-            if (!other.CompareTag("Player"))
-                return;
-
-
-            _hasBeenChecked = true;
-
-
-            EvaluatePlayer();
+            EvaluatePlayer(other);
         }
 
 
-        private void EvaluatePlayer()
+        private void EvaluatePlayer(Collider other)
         {
-            if (pulseController == null)
+            PulseController pulse =
+                other.GetComponentInParent<PulseController>();
+
+
+            if (pulse == null)
             {
                 Debug.LogError(
-                    "PulseController is missing.",
-                    this);
+                    "PulseController is missing from player.",
+                    other.gameObject);
 
                 return;
             }
 
 
-            if (pulseController.IsPulsing)
+            if (pulse.IsPulsing)
             {
-                PassBarrier();
+                Debug.Log(
+                    "SUCCESS: Barrier passed while pulsing.");
             }
             else
             {
-                FailBarrier();
-            }
-        }
-
-
-        private void PassBarrier()
-        {
-            if (_hasPassed)
-                return;
-
-
-            _hasPassed = true;
-
-
-            Debug.Log(
-                "Barrier passed!");
-        }
-
-
-        private void FailBarrier()
-        {
-            Debug.Log(
-                "Barrier failed!");
-
-
-            if (GameManager.Instance != null)
-            {
-                GameManager.Instance.GameOver();
+                Debug.Log(
+                    "FAIL: Player was not pulsing.");
             }
         }
     }
