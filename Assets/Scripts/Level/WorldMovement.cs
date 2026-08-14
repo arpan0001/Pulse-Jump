@@ -4,9 +4,9 @@ namespace PulseJump.Level
 {
     public class WorldMovement : MonoBehaviour
     {
-        [Header("Movement")]
         [SerializeField]
         private float moveSpeed = 5f;
+
 
         private bool _isMoving;
 
@@ -26,12 +26,23 @@ namespace PulseJump.Level
         }
 
 
+        public void SetMoveSpeed(float speed)
+        {
+            moveSpeed = speed;
+        }
+
+
         private void Update()
         {
             if (!_isMoving)
                 return;
 
-            transform.Translate( Vector3.back *  moveSpeed *Time.deltaTime, Space.World);
+
+            transform.Translate(
+                Vector3.back *
+                moveSpeed *
+                Time.deltaTime,
+                Space.World);
         }
     }
 }
