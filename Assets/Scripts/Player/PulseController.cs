@@ -19,6 +19,7 @@ namespace PulseJump.Player
         [SerializeField]
         private float shrinkDuration = 0.18f;
 
+        private bool _inputEnabled;
 
         private Vector3 _normalScale;
 
@@ -35,6 +36,10 @@ namespace PulseJump.Player
             _normalScale = transform.localScale;
         }
 
+        public void SetInputEnabled(bool enabled)
+        {
+            _inputEnabled = enabled;
+        }
 
         public void TryPulse()
         {

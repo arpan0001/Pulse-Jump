@@ -75,7 +75,8 @@ namespace PulseJump.Game
         private void Start()
         {
             ResetStatistics();
-            StartStatistics();
+
+            StopStatistics();
         }
 
         public void StopStatistics()

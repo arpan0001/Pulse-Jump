@@ -75,6 +75,8 @@ namespace PulseJump.Game
 
         private float _elapsedTime;
         private float _currentSpeed;
+        private bool _isRunning;
+
 
 
         public float CurrentSpeed => _currentSpeed;
@@ -84,48 +86,40 @@ namespace PulseJump.Game
 
         private void Start()
         {
-            // Start the game on Easy.
-            CurrentLevel =
-                DifficultyLevel.Easy;
-
-
-            // Set initial speed.
             _currentSpeed =
                 startingSpeed;
 
+            _elapsedTime = 0f;
 
-            if (worldMovement == null)
-            {
-                Debug.LogError(
-                    "DifficultyManager: WorldMovement reference is missing.",
-                    this);
-
-                return;
-            }
-
+            _isRunning = false;
 
             worldMovement.SetMoveSpeed(
                 _currentSpeed);
         }
 
+        public void StartDifficulty()
+        {
+            _isRunning = true;
+        }
 
+
+        public void StopDifficulty()
+        {
+            _isRunning = false;
+        }
         private void Update()
         {
-            // Increase elapsed gameplay time.
+            if (!_isRunning)
+                return;
+
+
             _elapsedTime +=
                 Time.deltaTime;
 
 
-            // Determine Easy / Medium / Hard / VeryHard.
-            UpdateDifficultyLevel(
-                _elapsedTime);
-
-
-            // Update world movement speed.
             UpdateDifficulty(
                 _elapsedTime);
         }
-
 
         // --------------------------------------------------
         // DIFFICULTY LEVEL
