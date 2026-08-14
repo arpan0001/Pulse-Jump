@@ -72,6 +72,11 @@ namespace PulseJump.Game
             _isRunning = true;
         }
 
+        private void Start()
+        {
+            ResetStatistics();
+            StartStatistics();
+        }
 
         public void StopStatistics()
         {

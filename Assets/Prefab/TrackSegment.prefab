@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5782326855200731236}
-  - component: {fileID: 2606468155517688347}
   m_Layer: 0
   m_Name: TestBarrier
   m_TagString: Untagged
@@ -34,18 +33,6 @@ Transform:
   - {fileID: 5632055826091460287}
   m_Father: {fileID: 7528802350145103995}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2606468155517688347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 550578124740902410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e47661defef5af64ea7e422e19cb2f26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2060177870974515221
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,6 +347,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e47661defef5af64ea7e422e19cb2f26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameStatistics: {fileID: 0}
 --- !u!1 &7989090249585562116
 GameObject:
   m_ObjectHideFlags: 0

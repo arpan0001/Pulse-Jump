@@ -1,58 +1,146 @@
 using UnityEngine;
-using PulseJump.Player;
 using PulseJump.Game;
+using PulseJump.Player;
 
 namespace PulseJump.Obstacles
 {
     public class BarrierController : MonoBehaviour
     {
+        [Header("References")]
 
         [SerializeField]
-        private GameStatistics gameStatistics;
+        private Transform evaluationPoint;
 
-        private void OnTriggerEnter(Collider other)
+
+        private PulseController _pulseController;
+
+        private GameStatistics _gameStatistics;
+
+        private bool _evaluated;
+
+
+        private void Awake()
         {
-            EvaluatePlayer(other);
+            FindReferences();
         }
 
-        private void PassBarrier()
+
+        private void OnEnable()
         {
-            Debug.Log("Barrier passed successfully!");
+            // Important for pooled/reused barriers.
+            _evaluated = false;
+
+            FindReferences();
+        }
 
 
-            if (gameStatistics != null)
+        private void FindReferences()
+        {
+            if (_pulseController == null)
             {
-                gameStatistics.AddScore(1);
+                _pulseController =
+                    FindFirstObjectByType<PulseController>();
+            }
+
+
+            if (_gameStatistics == null)
+            {
+                _gameStatistics =
+                    FindFirstObjectByType<GameStatistics>();
+            }
+
+
+            if (_pulseController == null)
+            {
+                Debug.LogError(
+                    "BarrierController: PulseController not found.",
+                    this);
+            }
+
+
+            if (_gameStatistics == null)
+            {
+                Debug.LogError(
+                    "BarrierController: GameStatistics not found.",
+                    this);
             }
         }
 
 
-        private void EvaluatePlayer(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
-            PulseController pulse =
-                other.GetComponentInParent<PulseController>();
+            if (_evaluated)
+                return;
 
 
-            if (pulse == null)
+            if (!other.CompareTag("Player"))
+                return;
+
+
+            EvaluatePlayer();
+        }
+
+
+        private void EvaluatePlayer()
+        {
+            if (_evaluated)
+                return;
+
+
+            _evaluated = true;
+
+
+            if (_pulseController == null)
+            {
+                FindReferences();
+            }
+
+
+            if (_pulseController == null)
             {
                 Debug.LogError(
-                    "PulseController is missing from player.",
-                    other.gameObject);
+                    "Cannot evaluate barrier because PulseController is missing.",
+                    this);
 
                 return;
             }
 
 
-            if (pulse.IsPulsing)
+            if (_pulseController.IsPulsing)
             {
-                Debug.Log(
-                    "SUCCESS: Barrier passed while pulsing.");
+                PassBarrier();
             }
             else
             {
-                Debug.Log(
-                    "FAIL: Player was not pulsing.");
+                FailBarrier();
             }
+        }
+
+
+        private void PassBarrier()
+        {
+            Debug.Log(
+                "Barrier passed successfully!");
+
+
+            if (_gameStatistics == null)
+            {
+                _gameStatistics =
+                    FindFirstObjectByType<GameStatistics>();
+            }
+
+
+            if (_gameStatistics != null)
+            {
+                _gameStatistics.AddScore(1);
+            }
+        }
+
+
+        private void FailBarrier()
+        {
+            Debug.Log(
+                "Barrier failed!");
         }
     }
 }
