@@ -18,6 +18,9 @@ namespace PulseJump.Obstacles
 
         private bool _evaluated;
 
+        // Sends the failure event to GameOverController.
+        public static event System.Action PlayerFailed;
+
 
         private void Awake()
         {
@@ -141,6 +144,9 @@ namespace PulseJump.Obstacles
         {
             Debug.Log(
                 "Barrier failed!");
+
+            // Notify GameOverController.
+            PlayerFailed?.Invoke();
         }
     }
 }
