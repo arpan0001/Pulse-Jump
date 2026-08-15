@@ -21,7 +21,10 @@ namespace PulseJump.Game
         [SerializeField]
         private PulseController pulseController;
 
+        [Header("Gameplay UI")]
 
+        [SerializeField]
+        private GameObject pauseButton;
         [Header("Start UI")]
 
         [SerializeField]
@@ -56,7 +59,10 @@ namespace PulseJump.Game
 
             Time.timeScale = 1f;
 
-
+            if (pauseButton != null)
+            {
+                pauseButton.SetActive(false);
+            }
             // ----------------------------------------------
             // PAUSE GAME
             // ----------------------------------------------
@@ -172,7 +178,10 @@ namespace PulseJump.Game
 
 
             _gameStarted = true;
-
+            if (pauseButton != null)
+            {
+                pauseButton.SetActive(true);
+            }
 
             // ----------------------------------------------
             // RESUME GAME

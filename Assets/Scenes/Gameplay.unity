@@ -1125,7 +1125,7 @@ MonoBehaviour:
   pulseSound: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
   barrierPassSound: {fileID: 8300000, guid: 7bd6b897eb5ca4b7d88a205c4a51640c, type: 3}
   gameOverSound: {fileID: 8300000, guid: a0010a1a0c474473b81729eb770c485f, type: 3}
-  buttonClickSound: {fileID: 8300000, guid: cf6c0e7fbef9449c98a0cdb5ea0c4d9f, type: 3}
+  buttonClickSound: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
   musicVolume: 0.4
   sfxVolume: 1
 --- !u!1 &470136749
@@ -1945,6 +1945,7 @@ MonoBehaviour:
   difficultyManager: {fileID: 1139749718}
   worldMovement: {fileID: 1643827773}
   pulseController: {fileID: 1426656948}
+  pauseButton: {fileID: 1269497305}
   tapToStartUI: {fileID: 1331663773}
   pulseUnlockDelay: 0.1
 --- !u!4 &983204733
@@ -2336,7 +2337,6 @@ GameObject:
   - component: {fileID: 1269497309}
   - component: {fileID: 1269497308}
   - component: {fileID: 1269497307}
-  - component: {fileID: 1269497310}
   m_Layer: 5
   m_Name: PauseButton
   m_TagString: Untagged
@@ -2420,18 +2420,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1269497310}
-        m_TargetAssemblyTypeName: PulseJump.UI.UIButtonSound, Assembly-CSharp
-        m_MethodName: PlayClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &1269497308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2470,19 +2458,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1269497305}
   m_CullTransparentMesh: 1
---- !u!114 &1269497310
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1269497305}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2916e099a43b48043bd8638d1214dbb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioManager: {fileID: 438250649}
 --- !u!1 &1331663773
 GameObject:
   m_ObjectHideFlags: 0
