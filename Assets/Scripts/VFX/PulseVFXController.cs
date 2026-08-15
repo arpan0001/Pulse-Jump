@@ -33,10 +33,6 @@ namespace PulseJump.VFX
         private float shrinkDuration = 0.18f;
 
 
-        [Header("Particles")]
-
-        [SerializeField]
-        private ParticleSystem pulseParticles;
 
 
         private Coroutine _pulseRoutine;
@@ -83,10 +79,7 @@ namespace PulseJump.VFX
 
 
             // Play particles.
-            if (pulseParticles != null)
-            {
-                pulseParticles.Play();
-            }
+            
 
 
             // Expand.
