@@ -4,6 +4,7 @@ using PulseJump.Obstacles;
 
 using PulseJump.Player;
 using PulseJump.Level;
+using TMPro;
 
 namespace PulseJump.Game
 {
@@ -19,6 +20,14 @@ namespace PulseJump.Game
 
         [SerializeField]
         private GameStatistics gameStatistics;
+
+        [Header("Game Over Statistics")]
+
+        [SerializeField]
+        private TMP_Text finalScoreText;
+
+        [SerializeField]
+        private TMP_Text finalDistanceText;
 
         [SerializeField]
         private PulseController pulseController;
@@ -71,8 +80,29 @@ namespace PulseJump.Game
             if (_gameOver)
                 return;
 
-
             _gameOver = true;
+
+
+            // ----------------------------------------------
+            // SHOW FINAL STATISTICS
+            // ----------------------------------------------
+
+            if (gameStatistics != null)
+            {
+                if (finalScoreText != null)
+                {
+                    finalScoreText.text =
+                        "Score: " + gameStatistics.Score;
+                }
+
+                if (finalDistanceText != null)
+                {
+                    finalDistanceText.text =
+                        "Distance: " +
+                        gameStatistics.Distance.ToString("0") +
+                        " m";
+                }
+            }
 
 
             // ----------------------------------------------
@@ -116,7 +146,7 @@ namespace PulseJump.Game
 
 
             // ----------------------------------------------
-            // SHOW GAME OVER UI
+            // SHOW GAME OVER PANEL
             // ----------------------------------------------
 
             if (gameOverPanel != null)
@@ -124,7 +154,6 @@ namespace PulseJump.Game
                 gameOverPanel.SetActive(true);
             }
         }
-
 
         // ==================================================
         // RESTART
