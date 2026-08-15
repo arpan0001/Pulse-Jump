@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8cba5e255420fc74c8f883bd6b77c747
+timeCreated: 1763471754
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 347018
+  packageName: Jelly pack UI
+  packageVersion: 1.0.0
+  assetPath: Assets/Jelly_UI_Pack/Scenes/Splash Screen.unity
+  uploadId: 907570

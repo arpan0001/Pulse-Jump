@@ -1,0 +1,28 @@
+fileFormatVersion: 2
+guid: fed6f08759347814fb58d5c9c83c7a13
+timeCreated: 1763473663
+licenseType: Store
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Luckiest Guy
+  fontNames:
+  - Luckiest Guy
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 347018
+  packageName: Jelly pack UI
+  packageVersion: 1.0.0
+  assetPath: Assets/Jelly_UI_Pack/Fonts/LuckiestGuy.ttf
+  uploadId: 907570

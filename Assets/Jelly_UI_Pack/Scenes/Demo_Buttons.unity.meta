@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 44d62d5f28322e64a986093422348158
+timeCreated: 1763571952
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 347018
+  packageName: Jelly pack UI
+  packageVersion: 1.0.0
+  assetPath: Assets/Jelly_UI_Pack/Scenes/Demo_Buttons.unity
+  uploadId: 907570
