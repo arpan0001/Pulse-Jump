@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using PulseJump.Game;
 using PulseJump.Player;
@@ -11,116 +12,44 @@ namespace PulseJump.Obstacles
         [SerializeField]
         private Transform evaluationPoint;
 
+        [SerializeField]
+        private ParticleSystem barrierParticles;
+
 
         private PulseController _pulseController;
-
         private GameStatistics _gameStatistics;
-
-        private ParticleSystem _barrierParticles;
 
         private bool _evaluated;
 
+        public static event Action BarrierPassed;
+        public static event Action PlayerFailed;
 
-        public static event System.Action BarrierPassed;
 
-        public static event System.Action PlayerFailed;
-
+        // --------------------------------------------------
+        // UNITY
+        // --------------------------------------------------
 
         private void Awake()
         {
-            _pulseController =
-                FindFirstObjectByType<PulseController>();
-
-            _gameStatistics =
-                FindFirstObjectByType<GameStatistics>();
-
-            _barrierParticles =
-                GetComponentInChildren<ParticleSystem>(true);
-
-
-            if (_barrierParticles == null)
-            {
-                Debug.LogError(
-                    "BarrierController: ParticleSystem NOT FOUND!",
-                    this);
-            }
-            else
-            {
-                Debug.Log(
-                    "BarrierController: ParticleSystem found.",
-                    this);
-            }
+            FindReferences();
         }
 
 
         private void OnEnable()
         {
+            // Reset only when this barrier is enabled.
             _evaluated = false;
 
-            if (_barrierParticles != null)
-            {
-                _barrierParticles.Stop(
-                    true,
-                    ParticleSystemStopBehavior.StopEmittingAndClear);
-            }
+            FindReferences();
         }
 
 
-        private void OnTriggerEnter(Collider other)
+        // --------------------------------------------------
+        // REFERENCES
+        // --------------------------------------------------
+
+        private void FindReferences()
         {
-            Debug.Log(
-                "Barrier trigger detected: " +
-                other.name);
-
-
-            if (_evaluated)
-                return;
-
-
-            if (!other.CompareTag("Player"))
-                return;
-
-
-            Debug.Log(
-                "PLAYER TOUCHED BARRIER");
-
-
-            EvaluatePlayer();
-        }
-
-
-        private void EvaluatePlayer()
-        {
-            if (_evaluated)
-                return;
-
-
-            _evaluated = true;
-
-
-            // -----------------------------------------
-            // PLAY PARTICLE
-            // -----------------------------------------
-
-            if (_barrierParticles != null)
-            {
-                Debug.Log(
-                    "Playing barrier particles");
-
-
-                _barrierParticles.Stop(
-                    true,
-                    ParticleSystemStopBehavior.StopEmittingAndClear);
-
-
-                _barrierParticles.Play();
-            }
-
-
-            // -----------------------------------------
-            // CHECK PULSE
-            // -----------------------------------------
-
             if (_pulseController == null)
             {
                 _pulseController =
@@ -128,14 +57,103 @@ namespace PulseJump.Obstacles
             }
 
 
+            if (_gameStatistics == null)
+            {
+                _gameStatistics =
+                    FindFirstObjectByType<GameStatistics>();
+            }
+
+
+            if (barrierParticles == null)
+            {
+                barrierParticles =
+                    GetComponentInChildren<ParticleSystem>();
+            }
+        }
+
+
+        // --------------------------------------------------
+        // RESET
+        // --------------------------------------------------
+
+        public void ResetBarrier()
+        {
+            _evaluated = false;
+
+            FindReferences();
+
+
+            if (barrierParticles != null)
+            {
+                barrierParticles.Stop(
+                    true,
+                    ParticleSystemStopBehavior.StopEmittingAndClear);
+            }
+
+
+            Debug.Log(
+                "BARRIER RESET: " +
+                gameObject.name);
+        }
+
+
+        // --------------------------------------------------
+        // TRIGGER
+        // --------------------------------------------------
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (_evaluated)
+                return;
+
+
+            // Use root so child objects such as
+            // Shield FX do not cause problems.
+            if (!other.transform.root.CompareTag("Player"))
+                return;
+
+
+            Debug.Log(
+                "PLAYER ENTERED BARRIER: " +
+                gameObject.name);
+
+
+            EvaluatePlayer();
+        }
+
+
+        // --------------------------------------------------
+        // EVALUATE
+        // --------------------------------------------------
+
+        private void EvaluatePlayer()
+        {
+            if (_evaluated)
+                return;
+
+
+            // IMPORTANT:
+            // Lock this barrier immediately.
+            _evaluated = true;
+
+
+            if (_pulseController == null)
+            {
+                FindReferences();
+            }
+
+
             if (_pulseController == null)
             {
                 Debug.LogError(
-                    "PulseController not found!",
+                    "BarrierController: PulseController not found.",
                     this);
 
                 return;
             }
+
+
+            PlayBarrierParticles();
 
 
             if (_pulseController.IsPulsing)
@@ -149,19 +167,56 @@ namespace PulseJump.Obstacles
         }
 
 
+        // --------------------------------------------------
+        // PARTICLES
+        // --------------------------------------------------
+
+        private void PlayBarrierParticles()
+        {
+            if (barrierParticles == null)
+            {
+                FindReferences();
+            }
+
+
+            if (barrierParticles == null)
+            {
+                Debug.LogWarning(
+                    "BarrierController: ParticleSystem not found.",
+                    this);
+
+                return;
+            }
+
+
+            barrierParticles.Stop(
+                true,
+                ParticleSystemStopBehavior.StopEmittingAndClear);
+
+            barrierParticles.Play();
+
+
+            Debug.Log(
+                "Playing barrier particles");
+        }
+
+
+        // --------------------------------------------------
+        // PASS
+        // --------------------------------------------------
+
         private void PassBarrier()
         {
-            Debug.Log(
-                "BARRIER PASSED");
+            Debug.Log("BARRIER PASSED");
 
 
+            // Notify AudioManager and GameVFXManager
             BarrierPassed?.Invoke();
 
 
             if (_gameStatistics == null)
             {
-                _gameStatistics =
-                    FindFirstObjectByType<GameStatistics>();
+                FindReferences();
             }
 
 
@@ -171,6 +226,10 @@ namespace PulseJump.Obstacles
             }
         }
 
+
+        // --------------------------------------------------
+        // FAIL
+        // --------------------------------------------------
 
         private void FailBarrier()
         {

@@ -1,4 +1,3 @@
-using PulseJump.Obstacles;
 using UnityEngine;
 
 namespace PulseJump.Generation
@@ -10,8 +9,6 @@ namespace PulseJump.Generation
         [SerializeField]
         private TrackPool trackPool;
 
-        [SerializeField]
-        private BarrierLibrary barrierLibrary;
 
         [Header("Track Settings")]
 
@@ -35,6 +32,7 @@ namespace PulseJump.Generation
         {
             _nextZ = 0f;
 
+
             for (int i = 0; i < startingSegments; i++)
             {
                 SpawnTrack();
@@ -44,11 +42,24 @@ namespace PulseJump.Generation
 
         private void SpawnTrack()
         {
+            if (trackPool == null)
+            {
+                Debug.LogError(
+                    "TrackGenerator: TrackPool is missing.",
+                    this);
+
+                return;
+            }
+
+
             TrackSegment segment =
                 trackPool.Get();
 
 
-            // Position relative to World.
+            if (segment == null)
+                return;
+
+
             segment.transform.localPosition =
                 new Vector3(
                     0f,
@@ -56,8 +67,9 @@ namespace PulseJump.Generation
                     _nextZ);
 
 
-            // Give the recycler a reference
-            // to this generator.
+            segment.ResetSegment();
+
+
             TrackRecycler recycler =
                 segment.GetComponent<TrackRecycler>();
 
@@ -71,52 +83,19 @@ namespace PulseJump.Generation
             _nextZ += trackLength;
         }
 
-        private void TrySpawnBarrier(
-     TrackSegment segment)
-        {
-            if (barrierLibrary == null)
-            {
-                Debug.LogError(
-                    "TrackGenerator: BarrierLibrary is missing.",
-                    this);
-
-                return;
-            }
-
-
-            BarrierDefinition definition =
-                barrierLibrary.GetRandomBarrier();
-
-
-            if (definition == null)
-                return;
-
-
-            if (definition.prefab == null)
-            {
-                Debug.LogError(
-                    "BarrierDefinition has no prefab.",
-                    definition);
-
-                return;
-            }
-
-
-            GameObject barrier =
-                Instantiate(
-                    definition.prefab);
-
-
-            segment.SetBarrier(
-                barrier);
-        }
-
 
         public void RecycleTrack(
             TrackSegment segment)
         {
-            // Move this segment to the
-            // end of the track.
+            if (segment == null)
+                return;
+
+
+            Debug.Log(
+                "RECYCLING TRACK: " +
+                segment.name);
+
+
             segment.transform.localPosition =
                 new Vector3(
                     0f,
@@ -124,7 +103,10 @@ namespace PulseJump.Generation
                     _nextZ);
 
 
-            // Re-initialize recycler.
+            // Reset existing barrier.
+            segment.ResetSegment();
+
+
             TrackRecycler recycler =
                 segment.GetComponent<TrackRecycler>();
 

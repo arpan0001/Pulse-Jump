@@ -1,76 +1,88 @@
 using UnityEngine;
+using PulseJump.Obstacles;
 
 namespace PulseJump.Generation
 {
     public class TrackSegment : MonoBehaviour
     {
-        [Header("Barrier Spawn")]
+        [Header("Barrier")]
+
         [SerializeField]
-        private Transform barrierSpawnPoint;
+        private GameObject barrier;
 
 
-        private GameObject _activeBarrier;
+        private BarrierController _barrierController;
 
 
-        public Transform BarrierSpawnPoint =>
-            barrierSpawnPoint;
-
-
-        public GameObject ActiveBarrier =>
-            _activeBarrier;
-
-
-        public void SetBarrier(
-            GameObject barrier)
+        private void Awake()
         {
-            ClearBarrier();
-
-
-            if (barrier == null)
-                return;
-
-
-            _activeBarrier = barrier;
-
-
-            Transform parent =
-                barrier.transform;
-
-
-            parent.SetParent(
-                barrierSpawnPoint);
-
-
-            parent.localPosition =
-                Vector3.zero;
-
-
-            parent.localRotation =
-                Quaternion.identity;
-
-
-            parent.localScale =
-                Vector3.one;
-
-
-            barrier.SetActive(true);
+            CacheBarrier();
         }
 
 
-        public void ClearBarrier()
+        private void CacheBarrier()
         {
-            if (_activeBarrier == null)
+            if (barrier == null)
+            {
+                Debug.LogError(
+                    "TrackSegment: Barrier is not assigned.",
+                    this);
+
                 return;
+            }
 
 
-            _activeBarrier.SetActive(false);
+            _barrierController =
+                barrier.GetComponentInChildren<BarrierController>();
 
 
-            _activeBarrier.transform.SetParent(
-                null);
+            if (_barrierController == null)
+            {
+                Debug.LogError(
+                    "TrackSegment: BarrierController not found.",
+                    barrier);
+
+                return;
+            }
+        }
 
 
-            _activeBarrier = null;
+        // --------------------------------------------------
+        // RESET TRACK
+        // --------------------------------------------------
+
+        public void ResetSegment()
+        {
+            if (barrier == null)
+            {
+                Debug.LogError(
+                    "TrackSegment: Barrier is missing.",
+                    this);
+
+                return;
+            }
+
+
+            if (_barrierController == null)
+            {
+                CacheBarrier();
+            }
+
+
+            // Reset barrier evaluation.
+            if (_barrierController != null)
+            {
+                _barrierController.ResetBarrier();
+            }
+
+
+            // Make sure barrier is active.
+            barrier.SetActive(true);
+
+
+            Debug.Log(
+                "TRACK RESET: " +
+                gameObject.name);
         }
     }
 }
