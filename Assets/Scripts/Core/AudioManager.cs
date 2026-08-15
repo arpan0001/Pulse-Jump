@@ -1,4 +1,5 @@
 using UnityEngine;
+using PulseJump.Obstacles;
 
 namespace PulseJump.Audio
 {
@@ -55,6 +56,22 @@ namespace PulseJump.Audio
         {
             PlayGameplayMusic();
         }
+        public void PauseMusic()
+        {
+            if (musicSource == null)
+                return;
+
+            musicSource.Pause();
+        }
+
+
+        public void ResumeMusic()
+        {
+            if (musicSource == null)
+                return;
+
+            musicSource.UnPause();
+        }
 
 
         private void SetupAudioSources()
@@ -74,6 +91,29 @@ namespace PulseJump.Audio
             }
         }
 
+        private void OnEnable()
+        {
+            BarrierController.BarrierPassed += OnBarrierPassed;
+            BarrierController.PlayerFailed += OnPlayerFailed;
+        }
+
+
+        private void OnDisable()
+        {
+            BarrierController.BarrierPassed -= OnBarrierPassed;
+            BarrierController.PlayerFailed -= OnPlayerFailed;
+        }
+
+        private void OnPlayerFailed()
+        {
+            PlayGameOverSound();
+        }
+
+
+        private void OnBarrierPassed()
+        {
+            PlayBarrierPassSound();
+        }
 
         // ==================================================
         // MUSIC

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using PulseJump.Audio;
 
 namespace PulseJump.Player
 {
@@ -10,6 +11,8 @@ namespace PulseJump.Player
         [SerializeField]
         private float pulseScale = 1.5f;
 
+        [SerializeField]
+        private AudioManager audioManager;
         [SerializeField]
         private float expandDuration = 0.12f;
 
@@ -128,20 +131,24 @@ namespace PulseJump.Player
 
         public void TryPulse()
         {
-            // Safety check.
             if (!_inputEnabled)
                 return;
 
+            if (_isPulsing)
+                return;
 
-            // Don't start another pulse
-            // while one is already running.
             if (_pulseCoroutine != null)
                 return;
 
 
+            if (audioManager != null)
+            {
+                audioManager.PlayPulseSound();
+            }
+
+
             _pulseCoroutine =
-                StartCoroutine(
-                    PulseRoutine());
+                StartCoroutine(PulseRoutine());
         }
 
 

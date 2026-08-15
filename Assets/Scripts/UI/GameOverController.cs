@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using PulseJump.Obstacles;
-
+using PulseJump.Audio;
 using PulseJump.Player;
 using PulseJump.Level;
 using TMPro;
@@ -15,6 +15,8 @@ namespace PulseJump.Game
         [SerializeField]
         private WorldMovement worldMovement;
 
+        [SerializeField]
+        private AudioManager audioManager;
         [SerializeField]
         private DifficultyManager difficultyManager;
 
@@ -82,7 +84,10 @@ namespace PulseJump.Game
 
             _gameOver = true;
 
-
+            if (audioManager != null)
+            {
+                audioManager.StopMusic();
+            }
             // ----------------------------------------------
             // SHOW FINAL STATISTICS
             // ----------------------------------------------

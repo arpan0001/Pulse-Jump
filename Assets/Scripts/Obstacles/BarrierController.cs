@@ -16,6 +16,7 @@ namespace PulseJump.Obstacles
 
         private GameStatistics _gameStatistics;
 
+        public static event System.Action BarrierPassed;
         private bool _evaluated;
 
         // Sends the failure event to GameOverController.
@@ -137,6 +138,9 @@ namespace PulseJump.Obstacles
             {
                 _gameStatistics.AddScore(1);
             }
+
+
+            BarrierPassed?.Invoke();
         }
 
 

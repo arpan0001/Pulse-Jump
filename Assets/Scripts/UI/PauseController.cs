@@ -1,4 +1,5 @@
 using UnityEngine;
+using PulseJump.Audio;
 
 namespace PulseJump.Game
 {
@@ -9,6 +10,8 @@ namespace PulseJump.Game
         [SerializeField]
         private GameStartController gameStartController;
 
+        [SerializeField]
+        private AudioManager audioManager;
 
         [Header("Pause UI")]
 
@@ -46,7 +49,10 @@ namespace PulseJump.Game
             {
                 return;
             }
-
+            if (audioManager != null)
+            {
+                audioManager.PauseMusic();
+            }
 
             if (_isPaused)
                 return;
@@ -74,7 +80,10 @@ namespace PulseJump.Game
             if (!_isPaused)
                 return;
 
-
+            if (audioManager != null)
+            {
+                audioManager.ResumeMusic();
+            }
             _isPaused = false;
 
 
