@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using PulseJump.Audio;
+using PulseJump.VFX;
 
 namespace PulseJump.Player
 {
@@ -15,6 +16,9 @@ namespace PulseJump.Player
         private AudioManager audioManager;
         [SerializeField]
         private float expandDuration = 0.12f;
+
+        [SerializeField]
+        private PulseVFXController pulseVFX;
 
         [SerializeField]
         private float holdDuration = 0.20f;
@@ -139,6 +143,11 @@ namespace PulseJump.Player
 
             if (_pulseCoroutine != null)
                 return;
+            if (pulseVFX != null)
+            {
+                pulseVFX.PlayPulseEffect();
+            }
+
 
 
             if (audioManager != null)
