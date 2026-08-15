@@ -16,69 +16,73 @@ namespace PulseJump.Obstacles
 
         private GameStatistics _gameStatistics;
 
-        public static event System.Action BarrierPassed;
+        private ParticleSystem _barrierParticles;
+
         private bool _evaluated;
 
-        // Sends the failure event to GameOverController.
+
+        public static event System.Action BarrierPassed;
+
         public static event System.Action PlayerFailed;
 
 
         private void Awake()
         {
-            FindReferences();
+            _pulseController =
+                FindFirstObjectByType<PulseController>();
+
+            _gameStatistics =
+                FindFirstObjectByType<GameStatistics>();
+
+            _barrierParticles =
+                GetComponentInChildren<ParticleSystem>(true);
+
+
+            if (_barrierParticles == null)
+            {
+                Debug.LogError(
+                    "BarrierController: ParticleSystem NOT FOUND!",
+                    this);
+            }
+            else
+            {
+                Debug.Log(
+                    "BarrierController: ParticleSystem found.",
+                    this);
+            }
         }
 
 
         private void OnEnable()
         {
-            // Important for pooled/reused barriers.
             _evaluated = false;
 
-            FindReferences();
-        }
-
-
-        private void FindReferences()
-        {
-            if (_pulseController == null)
+            if (_barrierParticles != null)
             {
-                _pulseController =
-                    FindFirstObjectByType<PulseController>();
-            }
-
-
-            if (_gameStatistics == null)
-            {
-                _gameStatistics =
-                    FindFirstObjectByType<GameStatistics>();
-            }
-
-
-            if (_pulseController == null)
-            {
-                Debug.LogError(
-                    "BarrierController: PulseController not found.",
-                    this);
-            }
-
-
-            if (_gameStatistics == null)
-            {
-                Debug.LogError(
-                    "BarrierController: GameStatistics not found.",
-                    this);
+                _barrierParticles.Stop(
+                    true,
+                    ParticleSystemStopBehavior.StopEmittingAndClear);
             }
         }
 
 
         private void OnTriggerEnter(Collider other)
         {
+            Debug.Log(
+                "Barrier trigger detected: " +
+                other.name);
+
+
             if (_evaluated)
                 return;
 
 
             if (!other.CompareTag("Player"))
                 return;
+
+
+            Debug.Log(
+                "PLAYER TOUCHED BARRIER");
 
 
             EvaluatePlayer();
@@ -94,16 +98,40 @@ namespace PulseJump.Obstacles
             _evaluated = true;
 
 
+            // -----------------------------------------
+            // PLAY PARTICLE
+            // -----------------------------------------
+
+            if (_barrierParticles != null)
+            {
+                Debug.Log(
+                    "Playing barrier particles");
+
+
+                _barrierParticles.Stop(
+                    true,
+                    ParticleSystemStopBehavior.StopEmittingAndClear);
+
+
+                _barrierParticles.Play();
+            }
+
+
+            // -----------------------------------------
+            // CHECK PULSE
+            // -----------------------------------------
+
             if (_pulseController == null)
             {
-                FindReferences();
+                _pulseController =
+                    FindFirstObjectByType<PulseController>();
             }
 
 
             if (_pulseController == null)
             {
                 Debug.LogError(
-                    "Cannot evaluate barrier because PulseController is missing.",
+                    "PulseController not found!",
                     this);
 
                 return;
@@ -124,7 +152,10 @@ namespace PulseJump.Obstacles
         private void PassBarrier()
         {
             Debug.Log(
-                "Barrier passed successfully!");
+                "BARRIER PASSED");
+
+
+            BarrierPassed?.Invoke();
 
 
             if (_gameStatistics == null)
@@ -138,18 +169,15 @@ namespace PulseJump.Obstacles
             {
                 _gameStatistics.AddScore(1);
             }
-
-
-            BarrierPassed?.Invoke();
         }
 
 
         private void FailBarrier()
         {
             Debug.Log(
-                "Barrier failed!");
+                "BARRIER FAILED");
 
-            // Notify GameOverController.
+
             PlayerFailed?.Invoke();
         }
     }
