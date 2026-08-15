@@ -35,10 +35,11 @@ namespace PulseJump.UI
         }
 
 
+        
         private void UpdateScore()
         {
             scoreText.text =
-                statistics.Score.ToString();
+                "Score: " + statistics.Score;
         }
 
 
