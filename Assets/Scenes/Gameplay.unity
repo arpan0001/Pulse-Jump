@@ -2269,8 +2269,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldMovement: {fileID: 1643827773}
   startingSpeed: 20
-  maximumSpeed: 100
-  speedIncreasePerSecond: 0.1
+  maximumSpeed: 70
+  speedIncreasePerSecond: 1
   easyObstacleChance: 0.35
   mediumObstacleChance: 0.5
   hardObstacleChance: 0.65
