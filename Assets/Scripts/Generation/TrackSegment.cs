@@ -1,5 +1,6 @@
 using UnityEngine;
 using PulseJump.Obstacles;
+using PulseJump.Game;
 
 namespace PulseJump.Generation
 {
@@ -13,7 +14,8 @@ namespace PulseJump.Generation
 
         private BarrierController _barrierController;
 
-
+        [SerializeField]
+        private FlyAwayOnTaggedHit[] resettableBarriers;
         private void Awake()
         {
             CacheBarrier();
@@ -61,7 +63,10 @@ namespace PulseJump.Generation
 
                 return;
             }
-
+            foreach (FlyAwayOnTaggedHit barrier in resettableBarriers)
+            {
+                barrier.ResetForTrackReuse();
+            }
 
             if (_barrierController == null)
             {
