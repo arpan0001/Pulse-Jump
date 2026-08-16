@@ -1663,7 +1663,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7364778227223438049, guid: 2378b4a0c3f1080439606a9c137e5220, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2269,8 +2269,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldMovement: {fileID: 1643827773}
   startingSpeed: 20
-  maximumSpeed: 70
-  speedIncreasePerSecond: 1
+  maximumSpeed: 68
+  speedIncreasePerSecond: 0.7
   easyObstacleChance: 0.35
   mediumObstacleChance: 0.5
   hardObstacleChance: 0.65
@@ -2691,7 +2691,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 12
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
 --- !u!135 &1426656943
 SphereCollider:
   m_ObjectHideFlags: 0
