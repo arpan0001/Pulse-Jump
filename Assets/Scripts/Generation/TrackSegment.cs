@@ -11,18 +11,20 @@ namespace PulseJump.Generation
         [SerializeField]
         private GameObject barrier;
 
-
-        private BarrierController _barrierController;
-
         [SerializeField]
         private FlyAwayOnTaggedHit[] resettableBarriers;
+
+
+        private BarrierController[] barrierControllers;
+
+
         private void Awake()
         {
-            CacheBarrier();
+            CacheBarriers();
         }
 
 
-        private void CacheBarrier()
+        private void CacheBarriers()
         {
             if (barrier == null)
             {
@@ -33,25 +35,18 @@ namespace PulseJump.Generation
                 return;
             }
 
+            barrierControllers =
+                barrier.GetComponentsInChildren<
+                    BarrierController>(true);
 
-            _barrierController =
-                barrier.GetComponentInChildren<BarrierController>();
-
-
-            if (_barrierController == null)
+            if (barrierControllers.Length == 0)
             {
                 Debug.LogError(
-                    "TrackSegment: BarrierController not found.",
+                    "TrackSegment: No BarrierControllers found.",
                     barrier);
-
-                return;
             }
         }
 
-
-        // --------------------------------------------------
-        // RESET TRACK
-        // --------------------------------------------------
 
         public void ResetSegment()
         {
@@ -63,27 +58,35 @@ namespace PulseJump.Generation
 
                 return;
             }
-            foreach (FlyAwayOnTaggedHit barrier in resettableBarriers)
-            {
-                barrier.ResetForTrackReuse();
-            }
 
-            if (_barrierController == null)
-            {
-                CacheBarrier();
-            }
-
-
-            // Reset barrier evaluation.
-            if (_barrierController != null)
-            {
-                _barrierController.ResetBarrier();
-            }
-
-
-            // Make sure barrier is active.
+            // Activate the complete barrier hierarchy first.
             barrier.SetActive(true);
 
+            if (barrierControllers == null ||
+                barrierControllers.Length == 0)
+            {
+                CacheBarriers();
+            }
+
+            // Reset every flying/destructible object.
+            foreach (FlyAwayOnTaggedHit flyAwayBarrier
+                in resettableBarriers)
+            {
+                if (flyAwayBarrier != null)
+                {
+                    flyAwayBarrier.ResetForTrackReuse();
+                }
+            }
+
+            // Reset every BarrierController in this TrackSegment.
+            foreach (BarrierController controller
+                in barrierControllers)
+            {
+                if (controller != null)
+                {
+                    controller.ResetBarrier();
+                }
+            }
 
             Debug.Log(
                 "TRACK RESET: " +

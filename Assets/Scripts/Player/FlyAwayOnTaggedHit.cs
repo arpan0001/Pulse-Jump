@@ -24,6 +24,7 @@ namespace PulseJump.Game
         private Transform originalParent;
         private Vector3 originalLocalPosition;
         private Quaternion originalLocalRotation;
+        private Vector3 originalLocalScale;
 
         private bool hasFlown;
 
@@ -36,6 +37,7 @@ namespace PulseJump.Game
             originalParent = transform.parent;
             originalLocalPosition = transform.localPosition;
             originalLocalRotation = transform.localRotation;
+            originalLocalScale = transform.localScale;
 
             ResetForTrackReuse();
         }
@@ -82,6 +84,7 @@ namespace PulseJump.Game
 
             transform.localPosition = originalLocalPosition;
             transform.localRotation = originalLocalRotation;
+            transform.localScale = originalLocalScale;
 
             hasFlown = false;
 
