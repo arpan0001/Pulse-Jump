@@ -12,42 +12,37 @@ namespace PulseJump.Level
 
         public float MoveSpeed => moveSpeed;
 
-
+        [SerializeField]
+        private PulseJump.VFX.SpeedLineVFX speedLineVFX;
         private void Awake()
         {
-            // Always start disabled.
             _movementAuthorized = false;
             enabled = false;
         }
 
+        // If something else tries to enable
+        // this component before the game starts,
+        // immediately disable it again.
 
         private void OnEnable()
         {
-            // If something else tries to enable
-            // this component before the game starts,
-            // immediately disable it again.
-
+        
             if (!_movementAuthorized)
             {
                 enabled = false;
             }
         }
-
-
-        /// <summary>
-        /// Called ONLY when the actual game starts.
-        /// </summary>
+      
+        /// Called ONLY when the actual game starts.       
         public void StartMovement()
         {
             _movementAuthorized = true;
 
             enabled = true;
         }
-
-
-        /// <summary>
+       
         /// Stops the world and removes movement permission.
-        /// </summary>
+        
         public void StopMovement()
         {
             _movementAuthorized = false;
@@ -64,11 +59,7 @@ namespace PulseJump.Level
 
         private void Update()
         {
-            transform.Translate(
-                Vector3.back *
-                moveSpeed *
-                Time.deltaTime,
-                Space.World);
+            transform.Translate( Vector3.back * moveSpeed * Time.deltaTime,Space.World);
         }
     }
 }

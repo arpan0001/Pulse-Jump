@@ -43,14 +43,10 @@ namespace PulseJump.Game
 
         private bool _gameOver;
 
-
         public bool IsGameOver => _gameOver;
 
 
-        // ==================================================
-        // AWAKE
-        // ==================================================
-
+        // Initializes the game over state and hides the game over panel.
         private void Awake()
         {
             _gameOver = false;
@@ -61,22 +57,21 @@ namespace PulseJump.Game
             }
         }
 
+        // Starts listening for the player failure event.
         private void OnEnable()
         {
             BarrierController.PlayerFailed += TriggerGameOver;
         }
 
 
+        // Stops listening for the player failure event.
         private void OnDisable()
         {
             BarrierController.PlayerFailed -= TriggerGameOver;
         }
 
 
-        // ==================================================
-        // GAME OVER
-        // ==================================================
-
+        // Stops the game, displays the final statistics, and shows the game over panel.
         public void TriggerGameOver()
         {
             if (_gameOver)
@@ -88,71 +83,40 @@ namespace PulseJump.Game
             {
                 audioManager.StopMusic();
             }
-            // ----------------------------------------------
-            // SHOW FINAL STATISTICS
-            // ----------------------------------------------
+           
 
             if (gameStatistics != null)
             {
                 if (finalScoreText != null)
                 {
-                    finalScoreText.text =
-                        "Score: " + gameStatistics.Score;
+                    finalScoreText.text ="Score: " + gameStatistics.Score;
                 }
 
                 if (finalDistanceText != null)
                 {
-                    finalDistanceText.text =
-                        "Distance: " +
-                        gameStatistics.Distance.ToString("0") +
-                        " m";
+                    finalDistanceText.text = "Distance: " +  gameStatistics.Distance.ToString("0") +  " m";
                 }
             }
-
-
-            // ----------------------------------------------
-            // STOP WORLD
-            // ----------------------------------------------
 
             if (worldMovement != null)
             {
                 worldMovement.StopMovement();
             }
 
-
-            // ----------------------------------------------
-            // STOP DIFFICULTY
-            // ----------------------------------------------
-
             if (difficultyManager != null)
             {
                 difficultyManager.StopDifficulty();
             }
-
-
-            // ----------------------------------------------
-            // STOP STATISTICS
-            // ----------------------------------------------
 
             if (gameStatistics != null)
             {
                 gameStatistics.StopStatistics();
             }
 
-
-            // ----------------------------------------------
-            // DISABLE PULSE
-            // ----------------------------------------------
-
             if (pulseController != null)
             {
                 pulseController.SetInputEnabled(false);
             }
-
-
-            // ----------------------------------------------
-            // SHOW GAME OVER PANEL
-            // ----------------------------------------------
 
             if (gameOverPanel != null)
             {
@@ -160,16 +124,12 @@ namespace PulseJump.Game
             }
         }
 
-        // ==================================================
-        // RESTART
-        // ==================================================
-
+        // Restarts the current scene and resets the game.
         public void RestartGame()
         {
             Time.timeScale = 1f;
 
-            SceneManager.LoadScene(
-                SceneManager.GetActiveScene().buildIndex
+            SceneManager.LoadScene( SceneManager.GetActiveScene().buildIndex
             );
         }
     }

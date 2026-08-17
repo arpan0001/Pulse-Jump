@@ -20,13 +20,10 @@ namespace PulseJump.CameraSystem
                 StopCoroutine(_shakeRoutine);
             }
 
-            _shakeRoutine = StartCoroutine(
-                ShakeRoutine(duration, strength));
+            _shakeRoutine = StartCoroutine(ShakeRoutine(duration, strength));
         }
 
-        private IEnumerator ShakeRoutine(
-            float duration,
-            float strength)
+        private IEnumerator ShakeRoutine( float duration,float strength)
         {
             float elapsed = 0f;
 
@@ -37,15 +34,12 @@ namespace PulseJump.CameraSystem
                 float x = Random.Range(-1f, 1f) * strength;
                 float y = Random.Range(-1f, 1f) * strength;
 
-                transform.localPosition =
-                    _originalPosition +
-                    new Vector3(x, y, 0f);
+                transform.localPosition =  _originalPosition + new Vector3(x, y, 0f);
 
                 yield return null;
             }
 
-            transform.localPosition =
-                _originalPosition;
+            transform.localPosition = _originalPosition;
 
             _shakeRoutine = null;
         }

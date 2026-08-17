@@ -7,32 +7,24 @@ namespace PulseJump.Player
         [SerializeField]
         private PulseController pulseController;
 
-
         private void Update()
         {
-#if UNITY_EDITOR || UNITY_STANDALONE
+
             if (Input.GetMouseButtonDown(0))
             {
                 Pulse();
             }
-#endif
-
 
             if (Input.touchCount > 0)
             {
-                Touch touch =
-                    Input.GetTouch(0);
+                Touch touch = Input.GetTouch(0);
 
-
-                if (touch.phase ==
-                    TouchPhase.Began)
+                if (touch.phase == TouchPhase.Began)
                 {
                     Pulse();
                 }
             }
         }
-
-
         private void Pulse()
         {
             if (pulseController == null)

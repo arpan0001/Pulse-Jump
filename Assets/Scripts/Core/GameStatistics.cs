@@ -17,61 +17,46 @@ namespace PulseJump.Game
         private bool _isRunning;
 
 
-        public float ElapsedTime =>
-            _elapsedTime;
+        // Returns the total time the game has been running.
+        public float ElapsedTime => _elapsedTime;
+
+        public float Distance => _distance;
+
+        public int Score =>  _score;
+        public bool IsRunning =>  _isRunning;
 
 
-        public float Distance =>
-            _distance;
-
-
-        public int Score =>
-            _score;
-
-
-        public bool IsRunning =>
-            _isRunning;
-
-
+        // Updates the game time and distance every frame while statistics are running.
         private void Update()
         {
             if (!_isRunning)
                 return;
 
+            float deltaTime = Time.deltaTime;
 
-            float deltaTime =
-                Time.deltaTime;
-
-
-            _elapsedTime +=
-                deltaTime;
-
+            _elapsedTime +=  deltaTime;
 
             UpdateDistance(deltaTime);
         }
 
 
-        private void UpdateDistance(
-            float deltaTime)
+        // Calculates and updates the distance using the current game speed.
+        private void UpdateDistance( float deltaTime)
         {
             if (difficultyManager == null)
                 return;
 
+            float speed = difficultyManager.CurrentSpeed;
 
-            float speed =
-                difficultyManager.CurrentSpeed;
-
-
-            _distance +=
-                speed * deltaTime;
+            _distance += speed * deltaTime;
         }
-
 
         public void StartStatistics()
         {
             _isRunning = true;
         }
 
+        // Resets the statistics and keeps the system stopped when the scene starts.
         private void Start()
         {
             ResetStatistics();
@@ -85,6 +70,7 @@ namespace PulseJump.Game
         }
 
 
+        // Resets the time, distance, and score back to zero.
         public void ResetStatistics()
         {
             _elapsedTime = 0f;
@@ -93,6 +79,7 @@ namespace PulseJump.Game
         }
 
 
+        // Adds the given amount to the player's score.
         public void AddScore(int amount)
         {
             if (amount <= 0)

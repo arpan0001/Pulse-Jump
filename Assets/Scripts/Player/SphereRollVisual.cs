@@ -12,10 +12,7 @@ namespace PulseJump.Player
         {
             // Track moves toward the player along Z,
             // so the ball rolls around its local X axis.
-            transform.Rotate(
-                Vector3.right,
-                rollSpeed * Time.deltaTime,
-                Space.Self);
+            transform.Rotate( Vector3.right, rollSpeed * Time.deltaTime,  Space.Self);
         }
     }
 }

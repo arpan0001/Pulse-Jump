@@ -20,9 +20,7 @@ namespace PulseJump.Generation
         private Transform world;
 
 
-        private Queue<TrackSegment> _pool =
-            new Queue<TrackSegment>();
-
+        private Queue<TrackSegment> _pool = new Queue<TrackSegment>();
 
         private void Awake()
         {
@@ -30,15 +28,12 @@ namespace PulseJump.Generation
         }
 
 
+        // Creates and stores the initial track segments in the pool.
         private void CreatePool()
         {
             for (int i = 0; i < poolSize; i++)
             {
-                TrackSegment segment =
-                    Instantiate(
-                        trackPrefab,
-                        world);
-
+                TrackSegment segment = Instantiate( trackPrefab, world);
 
                 segment.gameObject.SetActive(false);
 
@@ -47,34 +42,27 @@ namespace PulseJump.Generation
         }
 
 
+        // Gets an available track segment from the pool.
         public TrackSegment Get()
         {
             if (_pool.Count == 0)
             {
-                Debug.LogError(
-                    "TrackPool is empty!");
-
                 return null;
             }
 
-
-            TrackSegment segment =
-                _pool.Dequeue();
-
+            TrackSegment segment = _pool.Dequeue();
 
             segment.gameObject.SetActive(true);
-
 
             return segment;
         }
 
 
-        public void Return(
-            TrackSegment segment)
+        // Returns a track segment to the pool for future reuse.
+        public void Return( TrackSegment segment)
         {
             if (segment == null)
                 return;
-
 
             segment.gameObject.SetActive(false);
 

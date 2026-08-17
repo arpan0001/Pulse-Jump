@@ -38,44 +38,27 @@ namespace PulseJump.UI
         
         private void UpdateScore()
         {
-            scoreText.text =
-                "Score: " + statistics.Score;
+            scoreText.text = "Score: " + statistics.Score;
         }
-
-
         private void UpdateDistance()
         {
-            float distance =
-                statistics.Distance;
+            float distance = statistics.Distance;
 
 
-            distanceText.text =
-                Mathf.FloorToInt(distance) +
-                " m";
+            distanceText.text = Mathf.FloorToInt(distance) + " m";
         }
 
 
         private void UpdateTimer()
         {
-            float time =
-                statistics.ElapsedTime;
+            float time = statistics.ElapsedTime;
+
+            int minutes = Mathf.FloorToInt(  time / 60f);
+
+            int seconds = Mathf.FloorToInt( time % 60f);
 
 
-            int minutes =
-                Mathf.FloorToInt(
-                    time / 60f);
-
-
-            int seconds =
-                Mathf.FloorToInt(
-                    time % 60f);
-
-
-            timerText.text =
-                string.Format(
-                    "{0:00}:{1:00}",
-                    minutes,
-                    seconds);
+            timerText.text = string.Format( "{0:00}:{1:00}",  minutes, seconds);
         }
     }
 }

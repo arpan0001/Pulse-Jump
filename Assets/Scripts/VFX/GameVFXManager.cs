@@ -30,46 +30,42 @@ namespace PulseJump.VFX
         private float failShakeStrength = 0.08f;
 
 
+        // Starts listening for barrier pass and player failure events.
         private void OnEnable()
         {
-            BarrierController.BarrierPassed +=
-                OnBarrierPassed;
+            BarrierController.BarrierPassed += OnBarrierPassed;
 
-            BarrierController.PlayerFailed +=
-                OnPlayerFailed;
+            BarrierController.PlayerFailed += OnPlayerFailed;
         }
 
 
+        // Stops listening for barrier pass and player failure events.
         private void OnDisable()
         {
-            BarrierController.BarrierPassed -=
-                OnBarrierPassed;
+            BarrierController.BarrierPassed -= OnBarrierPassed;
 
-            BarrierController.PlayerFailed -=
-                OnPlayerFailed;
+            BarrierController.PlayerFailed -= OnPlayerFailed;
         }
 
 
+        // Plays a small camera shake when the player passes a barrier.
         private void OnBarrierPassed()
         {
-            // Small satisfying shake.
+            
             if (cameraShake != null)
             {
-                cameraShake.Shake(
-                    passShakeDuration,
-                    passShakeStrength);
+                cameraShake.Shake(passShakeDuration, passShakeStrength);
             }
         }
 
 
+        // Plays a stronger camera shake when the player fails.
         private void OnPlayerFailed()
         {
-            // Stronger shake for failure.
+            
             if (cameraShake != null)
             {
-                cameraShake.Shake(
-                    failShakeDuration,
-                    failShakeStrength);
+                cameraShake.Shake(failShakeDuration, failShakeStrength);
             }
         }
     }

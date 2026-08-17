@@ -42,44 +42,30 @@ namespace PulseJump.Player
         private bool _isPulsing;
 
 
+        // Returns whether the player is currently performing a pulse.
         public bool IsPulsing => _isPulsing;
 
 
-        // ==================================================
-        // AWAKE
-        // ==================================================
-
+        // Saves the player's original scale and sets the initial input state.
         private void Awake()
         {
             // Store player's original scale.
             _normalScale = transform.localScale;
 
-
             // Pulse should normally be disabled
-            // when the scene starts.
-            _inputEnabled =
-                inputEnabledAtStart;
+
+            _inputEnabled = inputEnabledAtStart;
         }
 
-
-        // ==================================================
-        // UPDATE
-        // ==================================================
-
+        // Checks for player input and starts a pulse when the player taps.
         private void Update()
         {
-            // Pulse input isn't active yet.
             if (!_inputEnabled)
                 return;
 
-
-            // Don't allow another pulse while
-            // current pulse is running.
             if (_isPulsing)
                 return;
 
-
-            // Detect tap.
             if (WasTapped())
             {
                 TryPulse();
@@ -87,30 +73,20 @@ namespace PulseJump.Player
         }
 
 
-        // ==================================================
-        // INPUT
-        // ==================================================
-
+        // Checks whether the player has tapped the screen or mouse.
         private bool WasTapped()
         {
-#if UNITY_EDITOR
+         #if UNITY_EDITOR
 
             return Input.GetMouseButtonDown(0);
 
-#else
+         #else
 
-            return Input.touchCount > 0 &&
-                   Input.GetTouch(0).phase ==
-                   TouchPhase.Began;
-
-#endif
+            return Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began;
+         #endif
         }
 
-
-        // ==================================================
-        // ENABLE / DISABLE INPUT
-        // ==================================================
-
+        // Enables or disables pulse input.
         public void SetInputEnabled(bool enabled)
         {
             _inputEnabled = enabled;
@@ -118,21 +94,18 @@ namespace PulseJump.Player
 
             if (!enabled)
             {
-                Debug.Log(
-                    "Pulse input disabled.");
+                Debug.Log("Pulse input disabled.");
             }
             else
             {
-                Debug.Log(
-                    "Pulse input enabled.");
+                Debug.Log("Pulse input enabled.");
             }
         }
 
 
-        // ==================================================
-        // TRY PULSE
-        // ==================================================
 
+
+        // Starts the pulse if input is enabled and no other pulse is running.
         public void TryPulse()
         {
             if (!_inputEnabled)
@@ -161,57 +134,19 @@ namespace PulseJump.Player
         }
 
 
-        // ==================================================
-        // PULSE ROUTINE
-        // ==================================================
-
+        // Controls the complete pulse animation from expanding to shrinking.
         private IEnumerator PulseRoutine()
         {
             _isPulsing = true;
 
+            yield return StartCoroutine( ScaleTo(_normalScale *  pulseScale,  expandDuration ));
 
-            // ----------------------------------------------
-            // EXPAND
-            // ----------------------------------------------
+            yield return new WaitForSeconds( holdDuration);
 
-            yield return StartCoroutine(
-                ScaleTo(
-                    _normalScale *
-                    pulseScale,
-
-                    expandDuration
-                )
-            );
+            yield return StartCoroutine( ScaleTo ( _normalScale, shrinkDuration ));
 
 
-            // ----------------------------------------------
-            // HOLD
-            // ----------------------------------------------
-
-            yield return new WaitForSeconds(
-                holdDuration
-            );
-
-
-            // ----------------------------------------------
-            // SHRINK
-            // ----------------------------------------------
-
-            yield return StartCoroutine(
-                ScaleTo(
-                    _normalScale,
-
-                    shrinkDuration
-                )
-            );
-
-
-            // ----------------------------------------------
-            // RESET
-            // ----------------------------------------------
-
-            transform.localScale =
-                _normalScale;
+            transform.localScale = _normalScale;
 
 
             _isPulsing = false;
@@ -221,23 +156,14 @@ namespace PulseJump.Player
         }
 
 
-        // ==================================================
-        // SCALE ANIMATION
-        // ==================================================
-
-        private IEnumerator ScaleTo(
-            Vector3 targetScale,
-            float duration)
+        // Smoothly changes the player's scale to the target scale.
+        private IEnumerator ScaleTo( Vector3 targetScale, float duration)
         {
-            Vector3 startScale =
-                transform.localScale;
+            Vector3 startScale =  transform.localScale;
 
-
-            // Handle zero duration.
             if (duration <= 0f)
             {
-                transform.localScale =
-                    targetScale;
+                transform.localScale =  targetScale;
 
                 yield break;
             }
@@ -248,37 +174,22 @@ namespace PulseJump.Player
 
             while (elapsed < duration)
             {
-                elapsed +=
-                    Time.deltaTime;
+                elapsed += Time.deltaTime;
 
 
-                float t =
-                    elapsed /
-                    duration;
+                float t =  elapsed /  duration;
+
+                t = Mathf.SmoothStep( 0f,1f, t);
 
 
-                // Smooth animation.
-                t = Mathf.SmoothStep(
-                    0f,
-                    1f,
-                    t
-                );
-
-
-                transform.localScale =
-                    Vector3.Lerp(
-                        startScale,
-                        targetScale,
-                        t
-                    );
+                transform.localScale = Vector3.Lerp( startScale,  targetScale,t  );
 
 
                 yield return null;
             }
 
 
-            transform.localScale =
-                targetScale;
+            transform.localScale =targetScale;
         }
     }
 }

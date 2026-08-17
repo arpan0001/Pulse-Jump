@@ -8,29 +8,26 @@ namespace PulseJump.UI
         [Header("Gameplay Scene")]
         [SerializeField]
         private string gameplaySceneName = "Gameplay";
-
-
         public void Play()
         {
             Time.timeScale = 1f;
 
-            SceneManager.LoadScene(
-                gameplaySceneName);
+            SceneManager.LoadScene( gameplaySceneName);
         }
 
 
         public void Quit()
         {
-#if UNITY_EDITOR
+           #if UNITY_EDITOR
 
             UnityEditor.EditorApplication.isPlaying =
                 false;
 
-#else
+            #else
 
             Application.Quit();
 
-#endif
+            #endif
         }
     }
 }

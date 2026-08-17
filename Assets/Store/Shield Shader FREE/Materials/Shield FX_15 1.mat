@@ -21,8 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Shield FX_15 1
-  m_Shader: {fileID: -6465566751694194690, guid: 7273ade5faebcb9448394e807492b217,
-    type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 7273ade5faebcb9448394e807492b217, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -30,7 +29,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2978
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
@@ -47,7 +46,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture_1:
-        m_Texture: {fileID: 2800000, guid: 779f526675bd03543b22644b944b9c0e, type: 3}
+        m_Texture: {fileID: 2800000, guid: e6dca393800c84aeb87f9576c0a18b44, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture_2:
@@ -81,11 +80,11 @@ Material:
     - _Enable_Texture: 1
     - _Float: 0.509
     - _Opacity_Global: 1
-    - _Opacity_On_Centre: 0.02
+    - _Opacity_On_Centre: 0
     - _Opacity_On_Side: 1
     - _Power: 4
     - _QueueControl: 0
-    - _QueueOffset: 0
+    - _QueueOffset: -22
     - _Speed: 1
     - _Text_2_Animation_X: 0
     - _Text_2_Animation_Y: 0.6
@@ -111,6 +110,7 @@ Material:
     - _Tiling: {r: 8, g: 8, b: 0, a: 0}
     - _Tiling_Tex_2: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!114 &5565035484657618864
 MonoBehaviour:
   m_ObjectHideFlags: 11

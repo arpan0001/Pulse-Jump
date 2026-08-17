@@ -18,20 +18,20 @@ namespace PulseJump.Generation
         [SerializeField]
         private int startingSegments = 6;
 
-
         private float _nextZ;
 
 
+        // Generates the initial track when the scene starts.
         private void Start()
         {
             GenerateInitialTrack();
         }
 
 
+        // Creates the starting number of track segments.
         private void GenerateInitialTrack()
         {
             _nextZ = 0f;
-
 
             for (int i = 0; i < startingSegments; i++)
             {
@@ -40,38 +40,25 @@ namespace PulseJump.Generation
         }
 
 
+        // Gets a track segment from the pool and places it at the next position.
         private void SpawnTrack()
         {
             if (trackPool == null)
             {
-                Debug.LogError(
-                    "TrackGenerator: TrackPool is missing.",
-                    this);
-
                 return;
             }
 
-
-            TrackSegment segment =
-                trackPool.Get();
+            TrackSegment segment = trackPool.Get();
 
 
             if (segment == null)
                 return;
 
-
-            segment.transform.localPosition =
-                new Vector3(
-                    0f,
-                    0f,
-                    _nextZ);
-
+            segment.transform.localPosition = new Vector3( 0f,  0f, _nextZ);
 
             segment.ResetSegment();
 
-
-            TrackRecycler recycler =
-                segment.GetComponent<TrackRecycler>();
+            TrackRecycler recycler = segment.GetComponent<TrackRecycler>();
 
 
             if (recycler != null)
@@ -79,36 +66,21 @@ namespace PulseJump.Generation
                 recycler.Initialize(this);
             }
 
-
             _nextZ += trackLength;
         }
 
 
-        public void RecycleTrack(
-            TrackSegment segment)
+        // Moves a recycled track segment to the next position and resets it.
+        public void RecycleTrack(TrackSegment segment)
         {
             if (segment == null)
                 return;
 
-
-            Debug.Log(
-                "RECYCLING TRACK: " +
-                segment.name);
-
-
-            segment.transform.localPosition =
-                new Vector3(
-                    0f,
-                    0f,
-                    _nextZ);
-
-
-            // Reset existing barrier.
+            segment.transform.localPosition =  new Vector3( 0f,  0f,  _nextZ);
+        
             segment.ResetSegment();
 
-
-            TrackRecycler recycler =
-                segment.GetComponent<TrackRecycler>();
+            TrackRecycler recycler = segment.GetComponent<TrackRecycler>();
 
 
             if (recycler != null)

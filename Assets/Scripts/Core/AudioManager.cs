@@ -45,17 +45,29 @@ namespace PulseJump.Audio
         [Range(0f, 1f)]
         private float sfxVolume = 1f;
 
+        [Header("Barrier Pass Sound")]
 
+        [SerializeField]
+        private float barrierPassCooldown = 0.15f;
+
+
+        private float nextBarrierPassSoundTime;
+
+
+        
         private void Awake()
         {
             SetupAudioSources();
         }
 
 
+        
         private void Start()
         {
             PlayGameplayMusic();
         }
+
+        
         public void PauseMusic()
         {
             if (musicSource == null)
@@ -65,6 +77,7 @@ namespace PulseJump.Audio
         }
 
 
+        
         public void ResumeMusic()
         {
             if (musicSource == null)
@@ -74,6 +87,7 @@ namespace PulseJump.Audio
         }
 
 
+        // Configures the music and sound effect audio sources.
         private void SetupAudioSources()
         {
             if (musicSource != null)
@@ -91,6 +105,7 @@ namespace PulseJump.Audio
             }
         }
 
+        // Connects the audio manager to barrier events.
         private void OnEnable()
         {
             BarrierController.BarrierPassed += OnBarrierPassed;
@@ -98,27 +113,27 @@ namespace PulseJump.Audio
         }
 
 
+        // Removes the audio manager from the barrier events.
         private void OnDisable()
         {
             BarrierController.BarrierPassed -= OnBarrierPassed;
             BarrierController.PlayerFailed -= OnPlayerFailed;
         }
 
+        
         private void OnPlayerFailed()
         {
             PlayGameOverSound();
         }
 
 
+        // Plays a sound when the player passes a barrier.
         private void OnBarrierPassed()
         {
             PlayBarrierPassSound();
         }
 
-        // ==================================================
-        // MUSIC
-        // ==================================================
-
+        // Starts playing the gameplay music.
         public void PlayGameplayMusic()
         {
             if (musicSource == null)
@@ -132,6 +147,7 @@ namespace PulseJump.Audio
         }
 
 
+        // Stops the currently playing music.
         public void StopMusic()
         {
             if (musicSource == null)
@@ -140,23 +156,27 @@ namespace PulseJump.Audio
             musicSource.Stop();
         }
 
-
-        // ==================================================
-        // SFX
-        // ==================================================
-
+      
         public void PlayPulseSound()
         {
             PlaySFX(pulseSound);
         }
 
 
+        // Plays the barrier pass sound while preventing it from playing too frequently.
         public void PlayBarrierPassSound()
         {
+            if (Time.unscaledTime < nextBarrierPassSoundTime)
+            {
+                return;
+            }
+
+            nextBarrierPassSoundTime =  Time.unscaledTime + barrierPassCooldown;
+
             PlaySFX(barrierPassSound);
         }
 
-
+       
         public void PlayGameOverSound()
         {
             PlaySFX(gameOverSound);
@@ -169,6 +189,7 @@ namespace PulseJump.Audio
         }
 
 
+        // Plays the given sound effect through the SFX audio source.
         private void PlaySFX(AudioClip clip)
         {
             if (sfxSource == null)
@@ -177,9 +198,7 @@ namespace PulseJump.Audio
             if (clip == null)
                 return;
 
-            sfxSource.PlayOneShot(
-                clip,
-                sfxVolume);
+            sfxSource.PlayOneShot( clip,  sfxVolume);
         }
     }
 }

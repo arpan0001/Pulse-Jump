@@ -10,7 +10,6 @@ namespace PulseJump.VFX
         [SerializeField]
         private GameObject pulseShaderObject;
 
-
         [SerializeField]
         private Transform pulseShaderTransform;
 
@@ -24,6 +23,9 @@ namespace PulseJump.VFX
         private float peakScale = 1.25f;
 
         [SerializeField]
+        private float shrinkScale = 0.9f;
+
+        [SerializeField]
         private float expandDuration = 0.12f;
 
         [SerializeField]
@@ -33,11 +35,11 @@ namespace PulseJump.VFX
         private float shrinkDuration = 0.18f;
 
 
-
-
         private Coroutine _pulseRoutine;
+        private bool _effectsBlocked;
 
 
+        // Disables the pulse shader when the object starts.
         private void Awake()
         {
             if (pulseShaderObject != null)
@@ -47,110 +49,85 @@ namespace PulseJump.VFX
         }
 
 
+        // Starts the pulse visual effect if effects are not blocked.
         public void PlayPulseEffect()
         {
+            if (_effectsBlocked)
+                return;
+
             if (_pulseRoutine != null)
             {
                 StopCoroutine(_pulseRoutine);
             }
 
-
-            _pulseRoutine =
-                StartCoroutine(
-                    PulseEffectRoutine());
+            _pulseRoutine = StartCoroutine(PulseEffectRoutine());
         }
 
 
+        // Controls the complete pulse effect from start to finish.
         private IEnumerator PulseEffectRoutine()
         {
-            if (pulseShaderObject == null ||
-                pulseShaderTransform == null)
+            if (pulseShaderObject == null || pulseShaderTransform == null)
             {
                 yield break;
             }
 
-
             pulseShaderObject.SetActive(true);
 
+            pulseShaderTransform.localScale = Vector3.one * startScale;
 
-            // Start small.
-            pulseShaderTransform.localScale =
-                Vector3.one * startScale;
+            yield return StartCoroutine(ScaleShader( startScale,  peakScale,  expandDuration));
 
+            yield return new WaitForSeconds( holdDuration);
 
-            // Play particles.
-            
-
-
-            // Expand.
-            yield return StartCoroutine(
-                ScaleShader(
-                    startScale,
-                    peakScale,
-                    expandDuration));
-
-
-            // Hold.
-            yield return new WaitForSeconds(
-                holdDuration);
-
-
-            // Shrink.
-            yield return StartCoroutine(
-                ScaleShader(
-                    peakScale,
-                    startScale,
-                    shrinkDuration));
-
+            yield return StartCoroutine(ScaleShader( peakScale, shrinkScale,shrinkDuration));
 
             pulseShaderObject.SetActive(false);
-
 
             _pulseRoutine = null;
         }
 
+        // Enables or disables the pulse effects and stops any running effect if blocked.
+        public void SetEffectsBlocked(bool blocked)
+        {
+            _effectsBlocked = blocked;
 
-        private IEnumerator ScaleShader(
-            float from,
-            float to,
-            float duration)
+            if (blocked)
+            {
+                if (_pulseRoutine != null)
+                {
+                    StopCoroutine(_pulseRoutine);
+                    _pulseRoutine = null;
+                }
+
+                if (pulseShaderObject != null)
+                {
+                    pulseShaderObject.SetActive(false);
+                }
+            }
+        }
+
+        // Smoothly changes the pulse shader scale from one size to another.
+        private IEnumerator ScaleShader(float from, float to, float duration)
         {
             float elapsed = 0f;
 
-
             while (elapsed < duration)
             {
-                elapsed +=
-                    Time.deltaTime;
+                elapsed += Time.deltaTime;
 
+                float t = elapsed / duration;
 
-                float t =
-                    elapsed / duration;
+                t = Mathf.SmoothStep( 0f, 1f, t);
 
+                float scale = Mathf.Lerp(from,to, t);
 
-                t = Mathf.SmoothStep(
-                    0f,
-                    1f,
-                    t);
-
-
-                float scale =
-                    Mathf.Lerp(
-                        from,
-                        to,
-                        t);
-
-
-                pulseShaderTransform.localScale =
-                    Vector3.one * scale;
-
+                pulseShaderTransform.localScale =Vector3.one * scale;
 
                 yield return null;
             }
 
-
-            pulseShaderTransform.localScale =
-                Vector3.one * to;
+            pulseShaderTransform.localScale = Vector3.one * to;
         }
     }
 }

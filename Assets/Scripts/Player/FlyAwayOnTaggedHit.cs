@@ -29,6 +29,7 @@ namespace PulseJump.Game
         private bool hasFlown;
 
 
+        // Gets the required components, saves the original transform, and resets the object.
         private void Awake()
         {
             cachedRigidbody = GetComponent<Rigidbody>();
@@ -43,6 +44,7 @@ namespace PulseJump.Game
         }
 
 
+        // Makes the object fly away when it is hit by an object with the required tag.
         private void OnTriggerEnter(Collider other)
         {
             if (hasFlown || !other.CompareTag(requiredTag))
@@ -61,23 +63,18 @@ namespace PulseJump.Game
             cachedRigidbody.isKinematic = false;
             cachedRigidbody.useGravity = false;
 
-            Vector3 direction =
-                transform.position - other.transform.position;
+            Vector3 direction = transform.position - other.transform.position;
 
             direction.y = 0f;
             direction.Normalize();
 
-            cachedRigidbody.AddForce(
-               direction * pushForce +
-           Vector3.up * upwardForce,
-          ForceMode.VelocityChange);
+            cachedRigidbody.AddForce(direction * pushForce + Vector3.up * upwardForce, ForceMode.VelocityChange);
 
-            cachedRigidbody.AddTorque(
-                Random.insideUnitSphere * spinForce,
-                ForceMode.Impulse);
+            cachedRigidbody.AddTorque(Random.insideUnitSphere * spinForce, ForceMode.Impulse);
         }
 
 
+        // Resets the object to its original position and physics state for reuse.
         public void ResetForTrackReuse()
         {
             transform.SetParent(originalParent, false);

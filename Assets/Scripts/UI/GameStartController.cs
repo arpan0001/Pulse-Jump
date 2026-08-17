@@ -41,21 +41,13 @@ namespace PulseJump.Game
 
         private Coroutine _pulseUnlockCoroutine;
 
-
         public bool IsGameStarted => _gameStarted;
 
 
-        // ==================================================
-        // AWAKE
-        // ==================================================
-
+        // Initializes the game in a paused state and disables gameplay systems.
         private void Awake()
         {
             _gameStarted = false;
-
-            // ----------------------------------------------
-            // RESET TIME
-            // ----------------------------------------------
 
             Time.timeScale = 1f;
 
@@ -63,46 +55,23 @@ namespace PulseJump.Game
             {
                 pauseButton.SetActive(false);
             }
-            // ----------------------------------------------
-            // PAUSE GAME
-            // ----------------------------------------------
-
+           
             Time.timeScale = 0f;
-
-
-            // ----------------------------------------------
-            // STOP WORLD
-            // ----------------------------------------------
 
             if (worldMovement != null)
             {
                 worldMovement.StopMovement();
             }
 
-
-            // ----------------------------------------------
-            // STOP STATISTICS
-            // ----------------------------------------------
-
             if (gameStatistics != null)
             {
                 gameStatistics.StopStatistics();
             }
 
-
-            // ----------------------------------------------
-            // STOP DIFFICULTY
-            // ----------------------------------------------
-
             if (difficultyManager != null)
             {
                 difficultyManager.StopDifficulty();
             }
-
-
-            // ----------------------------------------------
-            // DISABLE PULSE
-            // ----------------------------------------------
 
             if (pulseController != null)
             {
@@ -110,67 +79,47 @@ namespace PulseJump.Game
             }
         }
 
-
-        // ==================================================
-        // START
-        // ==================================================
-
+        // Keeps the game paused and shows the tap-to-start UI.
         private void Start()
         {
-            // Make sure the game remains paused.
+            
             Time.timeScale = 0f;
 
-
-            // Show start UI.
             if (tapToStartUI != null)
             {
                 tapToStartUI.SetActive(true);
             }
         }
 
-
-        // ==================================================
-        // UPDATE
-        // ==================================================
-
+        // Waits for the player's first tap to start the game.
         private void Update()
         {
-            // Game has already started.
             if (_gameStarted)
                 return;
 
-
-            // Detect first tap.
             if (WasTapped())
             {
                 StartGame();
             }
         }
 
-
-        // ==================================================
-        // INPUT
-        // ==================================================
-
+        // Checks whether the player has tapped the screen or mouse.
         private bool WasTapped()
         {
-#if UNITY_EDITOR
+          #if UNITY_EDITOR
 
             return Input.GetMouseButtonDown(0);
 
-#else
+          #else
 
             return Input.touchCount > 0 &&
                    Input.GetTouch(0).phase == TouchPhase.Began;
 
-#endif
+          #endif
         }
 
 
-        // ==================================================
-        // START GAME
-        // ==================================================
-
+        // Starts all gameplay systems and begins the game after the first tap.
         private void StartGame()
         {
             if (_gameStarted)
@@ -183,26 +132,12 @@ namespace PulseJump.Game
                 pauseButton.SetActive(true);
             }
 
-            // ----------------------------------------------
-            // RESUME GAME
-            // ----------------------------------------------
-
             Time.timeScale = 1f;
-
-
-            // ----------------------------------------------
-            // HIDE TAP TO START
-            // ----------------------------------------------
 
             if (tapToStartUI != null)
             {
                 tapToStartUI.SetActive(false);
             }
-
-
-            // ----------------------------------------------
-            // RESET + START STATISTICS
-            // ----------------------------------------------
 
             if (gameStatistics != null)
             {
@@ -211,64 +146,32 @@ namespace PulseJump.Game
                 gameStatistics.StartStatistics();
             }
 
-
-            // ----------------------------------------------
-            // START DIFFICULTY
-            // ----------------------------------------------
-
             if (difficultyManager != null)
             {
                 difficultyManager.StartDifficulty();
             }
-
-
-            // ----------------------------------------------
-            // START WORLD
-            // ----------------------------------------------
 
             if (worldMovement != null)
             {
                 worldMovement.StartMovement();
             }
 
-
-            // ----------------------------------------------
-            // KEEP PULSE DISABLED
-            // ----------------------------------------------
-
             if (pulseController != null)
             {
                 pulseController.SetInputEnabled(false);
             }
 
-
-            // ----------------------------------------------
-            // ENABLE PULSE AFTER 1 SECOND
-            // ----------------------------------------------
-
-            _pulseUnlockCoroutine =
-                StartCoroutine(
-                    EnablePulseAfterDelay());
+            _pulseUnlockCoroutine = StartCoroutine( EnablePulseAfterDelay());
         }
 
-
-        // ==================================================
-        // ENABLE PULSE AFTER DELAY
-        // ==================================================
-
+        // Waits for the unlock delay and then enables pulse input.
         private IEnumerator EnablePulseAfterDelay()
         {
-            // Wait one second of actual gameplay time.
-            yield return new WaitForSecondsRealtime(
-                pulseUnlockDelay);
+            yield return new WaitForSecondsRealtime( pulseUnlockDelay);
 
-
-            // Safety check.
             if (!_gameStarted)
                 yield break;
 
-
-            // Enable pulse input.
             if (pulseController != null)
             {
                 pulseController.SetInputEnabled(true);
@@ -279,20 +182,14 @@ namespace PulseJump.Game
         }
 
 
-        // ==================================================
-        // CLEANUP
-        // ==================================================
-
+        // Stops the pulse unlock coroutine and restores normal game time when destroyed.
         private void OnDestroy()
         {
             if (_pulseUnlockCoroutine != null)
             {
-                StopCoroutine(
-                    _pulseUnlockCoroutine);
+                StopCoroutine(_pulseUnlockCoroutine);
             }
 
-
-            // Never leave another scene paused.
             Time.timeScale = 1f;
         }
     }

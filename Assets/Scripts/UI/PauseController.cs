@@ -22,9 +22,11 @@ namespace PulseJump.Game
         private bool _isPaused;
 
 
+        // Returns whether the game is currently paused.
         public bool IsPaused => _isPaused;
 
 
+        // Initializes the pause state and hides the pause panel.
         private void Awake()
         {
             _isPaused = false;
@@ -36,16 +38,10 @@ namespace PulseJump.Game
             }
         }
 
-
-        // ==================================================
-        // PAUSE
-        // ==================================================
-
+        // Pauses the game, shows the pause panel, and pauses the music.
         public void PauseGame()
         {
-            // Don't pause before gameplay starts.
-            if (gameStartController != null &&
-                !gameStartController.IsGameStarted)
+            if (gameStartController != null && !gameStartController.IsGameStarted)
             {
                 return;
             }
@@ -56,7 +52,6 @@ namespace PulseJump.Game
 
             if (_isPaused)
                 return;
-
 
             _isPaused = true;
 
@@ -70,11 +65,7 @@ namespace PulseJump.Game
             Time.timeScale = 0f;
         }
 
-
-        // ==================================================
-        // RESUME
-        // ==================================================
-
+        // Resumes the game, hides the pause panel, and resumes the music.
         public void ResumeGame()
         {
             if (!_isPaused)
@@ -96,11 +87,7 @@ namespace PulseJump.Game
             Time.timeScale = 1f;
         }
 
-
-        // ==================================================
-        // TOGGLE
-        // ==================================================
-
+        // Switches between the paused and resumed game states.
         public void TogglePause()
         {
             if (_isPaused)
@@ -114,10 +101,7 @@ namespace PulseJump.Game
         }
 
 
-        // ==================================================
-        // CLEANUP
-        // ==================================================
-
+        // Makes sure the game time scale is restored when this object is destroyed.
         private void OnDestroy()
         {
             Time.timeScale = 1f;

@@ -27,7 +27,7 @@ Open Unity Hub and select Add Project. Select the root folder of the Pulse Jump 
 # How to Run the Project
 
 Unity Editor
-Open the project in Unity and load the Gameplay scene. Press Play to start the game. The game initially waits for the player to start, with the Tap To Play UI displayed. Tap or click the screen to begin gameplay.
+Open the project in Unity and load the Gameplay scene. Press Play to start the game. The game initially waits for the player to start, with the Tap To Play UI displayed. Tap or click the screen to begin gameplay.Tap on the screen so that ball will pulse and at correct time ball will clear the barrier
 
 # Build and Run Instructions
 

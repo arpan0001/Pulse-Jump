@@ -1,5 +1,6 @@
 using UnityEngine;
 using PulseJump.Level;
+using PulseJump.VFX;
 
 namespace PulseJump.Game
 {
@@ -77,24 +78,27 @@ namespace PulseJump.Game
         private float _currentSpeed;
         private bool _isRunning;
 
+        [SerializeField]
+        private PulseJump.VFX.SpeedLineVFX speedLineVFX;
 
 
+        // Gets the current world movement speed.
         public float CurrentSpeed => _currentSpeed;
 
+        // Gets the total time the difficulty system has been running.
         public float ElapsedTime => _elapsedTime;
 
 
+        // Initializes the starting speed, elapsed time, and difficulty state.
         private void Start()
         {
-            _currentSpeed =
-                startingSpeed;
+            _currentSpeed = startingSpeed;
 
             _elapsedTime = 0f;
 
             _isRunning = false;
 
-            worldMovement.SetMoveSpeed(
-                _currentSpeed);
+            worldMovement.SetMoveSpeed( _currentSpeed);
         }
 
         public void StartDifficulty()
@@ -102,138 +106,97 @@ namespace PulseJump.Game
             _isRunning = true;
         }
 
-
         public void StopDifficulty()
         {
             _isRunning = false;
         }
+
+        // Updates the elapsed time and difficulty every frame while running.
         private void Update()
         {
             if (!_isRunning)
                 return;
 
 
-            _elapsedTime +=
-                Time.deltaTime;
+            _elapsedTime += Time.deltaTime;
 
 
-            UpdateDifficulty(
-                _elapsedTime);
+            UpdateDifficulty(_elapsedTime);
         }
 
-        // --------------------------------------------------
-        // DIFFICULTY LEVEL
-        // --------------------------------------------------
-
-        private void UpdateDifficultyLevel(
-            float elapsedTime)
+       
+        // Sets the difficulty level based on how long the game has been running.
+        private void UpdateDifficultyLevel( float elapsedTime)
         {
             if (elapsedTime < 20f)
             {
-                CurrentLevel =
-                    DifficultyLevel.Easy;
+                CurrentLevel = DifficultyLevel.Easy;
             }
             else if (elapsedTime < 40f)
             {
-                CurrentLevel =
-                    DifficultyLevel.Medium;
+                CurrentLevel =  DifficultyLevel.Medium;
             }
             else if (elapsedTime < 60f)
             {
-                CurrentLevel =
-                    DifficultyLevel.Hard;
+                CurrentLevel = DifficultyLevel.Hard;
             }
             else
             {
-                CurrentLevel =
-                    DifficultyLevel.VeryHard;
+                CurrentLevel = DifficultyLevel.VeryHard;
             }
         }
 
-
-        // --------------------------------------------------
-        // WORLD SPEED
-        // --------------------------------------------------
-
-        private void UpdateDifficulty(
-            float elapsedTime)
+        // Calculates the current speed and updates the world and speed line effect.
+        private void UpdateDifficulty( float elapsedTime)
         {
-            float targetSpeed =
-                startingSpeed +
-                elapsedTime *
-                speedIncreasePerSecond;
+            float targetSpeed = startingSpeed + elapsedTime * speedIncreasePerSecond;
 
+            _currentSpeed = Mathf.Min(targetSpeed,maximumSpeed);
 
-            _currentSpeed =
-                Mathf.Min(
-                    targetSpeed,
-                    maximumSpeed);
-
+            if (speedLineVFX != null)
+            {
+                speedLineVFX.SetTrackSpeed(_currentSpeed);
+            }
 
             if (worldMovement != null)
             {
-                worldMovement.SetMoveSpeed(
-                    _currentSpeed);
+                worldMovement.SetMoveSpeed( _currentSpeed);
             }
         }
 
-
-        // --------------------------------------------------
-        // OBSTACLE CHANCE
-        // --------------------------------------------------
-
+        // Returns the obstacle spawn chance for the current difficulty level.
         public float GetObstacleChance()
         {
             switch (CurrentLevel)
             {
-                case DifficultyLevel.Easy:
-                    return easyObstacleChance;
+                case DifficultyLevel.Easy: return easyObstacleChance;
+
+                case DifficultyLevel.Medium: return mediumObstacleChance;
+
+                case DifficultyLevel.Hard: return hardObstacleChance;
+
+                case DifficultyLevel.VeryHard: return veryHardObstacleChance;
 
 
-                case DifficultyLevel.Medium:
-                    return mediumObstacleChance;
-
-
-                case DifficultyLevel.Hard:
-                    return hardObstacleChance;
-
-
-                case DifficultyLevel.VeryHard:
-                    return veryHardObstacleChance;
-
-
-                default:
-                    return easyObstacleChance;
+                default: return easyObstacleChance;
             }
         }
-
-
-        // --------------------------------------------------
-        // MINIMUM SAFE DISTANCE
-        // --------------------------------------------------
-
+     
+        // Returns the minimum number of safe segments required for the current difficulty.
         public int GetMinimumSafeSegments()
         {
             switch (CurrentLevel)
             {
-                case DifficultyLevel.Easy:
-                    return easySafeSegments;
+                case DifficultyLevel.Easy: return easySafeSegments;
+
+                case DifficultyLevel.Medium: return mediumSafeSegments;
+
+                case DifficultyLevel.Hard:  return hardSafeSegments;
+
+                case DifficultyLevel.VeryHard: return veryHardSafeSegments;
 
 
-                case DifficultyLevel.Medium:
-                    return mediumSafeSegments;
-
-
-                case DifficultyLevel.Hard:
-                    return hardSafeSegments;
-
-
-                case DifficultyLevel.VeryHard:
-                    return veryHardSafeSegments;
-
-
-                default:
-                    return easySafeSegments;
+                default: return easySafeSegments;
             }
         }
     }
